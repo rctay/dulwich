@@ -707,8 +707,8 @@ class ObjectStoreGraphWalker(object):
         if sha in self.heads:
             self.heads.remove(sha)
         if sha in self.parents:
-            for p in self.parents[sha]:
-                self.ack(p)
+            parent = self.parents[sha]
+            self.heads = set([p for p in parent if not p in self.heads])
 
     def next(self):
         """Iterate over ancestors of heads in the target."""

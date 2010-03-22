@@ -208,6 +208,20 @@ class RepositoryTests(unittest.TestCase):
         r = self._repo = open_repo('ooo_merge.git')
         self.assertEquals({}, r.get_config())
 
+    def test_common_revisions(self):
+        r1 = open_repo('simple_merge.git')
+        r2 = open_repo('simple_merge_theirs.git')
+
+        expected_shas = set(['0d89f20333fbb1d2f3a94da77f4981373d8f4310',
+                             '4cffe90e0a41ad3f5190079d7c8f036bde29cbe6',
+                             '60dacdc733de308bb77bb76ce0fb0f9b44c9769e'])
+
+        shas = r2.object_store.find_common_revisions(r1.get_graph_walker())
+        self.assertEqual(set(shas), expected_shas)
+
+        shas = r1.object_store.find_common_revisions(r2.get_graph_walker())
+        self.assertEqual(set(shas), expected_shas)
+
 
 class CheckRefFormatTests(unittest.TestCase):
     """Tests for the check_ref_format function.

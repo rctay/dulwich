@@ -708,11 +708,21 @@ class ObjectStoreGraphWalker(object):
 
     def ack(self, sha):
         """Ack that a particular revision and its ancestors are present in the source."""
-        if sha in self.heads:
-            self.heads.remove(sha)
-        if sha in self.parents:
-            for p in self.parents[sha]:
-                self.ack(p)
+        ancestors = [sha,]
+
+        # stop if we run out of heads to remove
+        while len(self.heads):
+            map(self.heads.remove, [a for a in ancestors if a in self.heads])
+
+            # collect all ancestors
+            new_ancestors = []
+            map(new_ancestors.extend, [a for a in ancestors if a in self.parents])
+
+            # no more ancestors; stop
+            if not len(new_ancestors):
+                break
+
+            ancestors = new_ancestors
 
     def next(self):
         """Iterate over ancestors of heads in the target."""

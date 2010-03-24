@@ -221,7 +221,6 @@ class BaseObjectStore(object):
         while sha:
             if sha in self:
                 haves.append(sha)
-                graphwalker.ack(sha)
             sha = graphwalker.next()
         return haves
 

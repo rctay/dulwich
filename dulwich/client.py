@@ -120,7 +120,7 @@ class GitClient(object):
 
         # read the final confirmation sha
         client_sha = self.proto.read(20)
-        if not client_sha in (None, "", sha):
+        if not client_sha in (None, "", sha, "0000"):
             raise ChecksumMismatch(sha, client_sha)
 
         return new_refs

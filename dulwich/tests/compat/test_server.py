@@ -31,7 +31,7 @@ from dulwich.server import (
     TCPGitServer,
     )
 from dulwich.tests import (
-    TestSkipped,
+    skip_test,
     )
 from server_utils import (
     ServerTests,
@@ -78,4 +78,4 @@ class GitServerTestCase(ServerTests, CompatTestCase):
         return port
 
     def test_push_to_dulwich(self):
-        raise TestSkipped('Skipping push test due to known deadlock bug.')
+        return skip_test('Skipping push test due to known deadlock bug.')

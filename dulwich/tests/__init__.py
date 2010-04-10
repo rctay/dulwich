@@ -21,10 +21,20 @@
 
 import unittest
 
-# XXX: Ideally we should allow other test runners as well, 
-# but unfortunately unittest doesn't have a SkipTest/TestSkipped
-# exception.
-from nose import SkipTest as TestSkipped
+"""
+XXX: Ideally we should allow other test runners as well,
+but unfortunately unittest doesn't have a SkipTest/TestSkipped
+exception.
+
+Users of this function should NOT assume it raises an exception; instead, use
+'return' to break execution.
+"""
+def skip_test(reason):
+    try:
+        from nose import SkipTest
+        raise SkipTest(reason)
+    except ImportError:
+        pass
 
 def test_suite():
     names = [

@@ -27,7 +27,7 @@ import unittest
 from dulwich.repo import Repo
 
 from dulwich.tests import (
-    TestSkipped,
+    skip_test,
     )
 
 _DEFAULT_GIT = 'git'
@@ -67,8 +67,8 @@ def require_git_version(required_version, git_path=_DEFAULT_GIT):
     if found_version < required_version:
         required_version = '.'.join(map(str, required_version))
         found_version = '.'.join(map(str, found_version))
-        raise TestSkipped('Test requires git >= %s, found %s' %
-                         (required_version, found_version))
+        return skip_test('Test requires git >= %s, found %s' %
+                        (required_version, found_version))
 
 
 def run_git(args, git_path=_DEFAULT_GIT, input=None, capture_stdout=False,

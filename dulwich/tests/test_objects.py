@@ -39,7 +39,7 @@ from dulwich.objects import (
     _parse_tree_py,
     )
 from dulwich.tests import (
-    TestSkipped,
+    skip_test,
     )
 
 a_sha = '6f670c0fb53f9463760b7295fbb814e965fb20c8'
@@ -288,7 +288,7 @@ class TreeTests(unittest.TestCase):
 
     def test_parse_tree_extension(self):
         if parse_tree is _parse_tree_py:
-            raise TestSkipped('parse_tree extension not found')
+            return skip_test('parse_tree extension not found')
         self._do_test_parse_tree(parse_tree)
 
 

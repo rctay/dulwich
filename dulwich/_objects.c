@@ -23,6 +23,18 @@
 
 #define bytehex(x) (((x)<0xa)?('0'+(x)):('a'-0xa+(x)))
 
+#ifndef HAVE_STRNLEN
+/* By Jan Wolter from http://unixpapa.com/incnote/string.html */
+size_t strnlen(char *s, size_t maxlen)
+{
+	size_t i;
+
+	for (i= 0; i < maxlen && *s != '\0'; i++, s++)
+	    ;
+	return i;
+}
+#endif
+
 static PyObject *sha_to_pyhex(const unsigned char *sha)
 {
 	char hexsha[41];

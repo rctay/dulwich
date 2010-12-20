@@ -288,6 +288,10 @@ class TestPack(PackTests):
         new_checksum = newpack.index.get_stored_checksum()
         self.assertTrue(wrong_version or orig_checksum == new_checksum)
 
+        # close packs
+        origpack.close()
+        newpack.close()
+
     def test_commit_obj(self):
         p = self.get_pack(pack1_sha)
         commit = p[commit_sha]

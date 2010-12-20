@@ -406,6 +406,10 @@ class DiskObjectStore(PackBasedObjectStore):
         temppath = os.path.join(self.pack_dir,
             sha_to_hex(urllib2.randombytes(20))+".temppack")
         write_pack(temppath, ((o, None) for o in p.iterobjects()), len(p))
+
+        # done with temp pack
+        p.close()
+
         pack_sha = load_pack_index(temppath+".idx").objects_sha1()
         newbasename = os.path.join(self.pack_dir, "pack-%s" % pack_sha)
         os.rename(temppath+".pack", newbasename+".pack")

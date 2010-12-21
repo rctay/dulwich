@@ -200,30 +200,31 @@ class DulwichTCPClientTest(CompatTestCase, DulwichClientTestBase):
         return path
 
 
-class TestSSHVendor(object):
-    @staticmethod
-    def connect_ssh(host, command, username=None, port=None):
-        cmd, path = command[0].replace("'", '').split(' ')
-        cmd = cmd.split('-', 1)
-        p = subprocess.Popen(cmd + [path], stdin=subprocess.PIPE,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return client.SubprocessWrapper(p)
+class TestSSHGitClient(client.SSHGitClient):
+
+    class TestSSHVendor(object):
+        @staticmethod
+        def connect_ssh(host, command, username=None, port=None):
+            cmd, path = command[0].replace("'", '').split(' ')
+            cmd = cmd.split('-', 1)
+            p = subprocess.Popen(cmd + [path], stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return client.SubprocessWrapper(p)
+
+    ssh_vendor_class = TestSSHVendor
 
 
 class DulwichMockSSHClientTest(CompatTestCase, DulwichClientTestBase):
     def setUp(self):
         CompatTestCase.setUp(self)
         DulwichClientTestBase.setUp(self)
-        self.real_vendor = client.get_ssh_vendor
-        client.get_ssh_vendor = TestSSHVendor
 
     def tearDown(self):
         DulwichClientTestBase.tearDown(self)
         CompatTestCase.tearDown(self)
-        client.get_ssh_vendor = self.real_vendor
 
     def _client(self):
-        return client.SSHGitClient('localhost')
+        return TestSSHGitClient('localhost')
 
     def _build_path(self, path):
         return self.gitroot + path

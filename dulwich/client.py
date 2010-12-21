@@ -338,11 +338,10 @@ class SSHVendor(object):
                                 stdout=subprocess.PIPE)
         return SubprocessWrapper(proc)
 
-# Can be overridden by users
-get_ssh_vendor = SSHVendor
-
 
 class SSHGitClient(GitClient):
+
+    ssh_vendor_class = SSHVendor
 
     def __init__(self, host, port=None, username=None, *args, **kwargs):
         self.host = host
@@ -351,7 +350,7 @@ class SSHGitClient(GitClient):
         GitClient.__init__(self, *args, **kwargs)
 
     def _connect(self, cmd, path):
-        con = get_ssh_vendor().connect_ssh(
+        con = self.ssh_vendor_class().connect_ssh(
             self.host, ["%s '%s'" % ('git-' + cmd, path)],
             port=self.port, username=self.username)
         return Protocol(con.read, con.write), con.can_read

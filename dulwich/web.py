@@ -112,16 +112,20 @@ def send_file(req, f, content_type):
         raise
 
 
-def _url_to_path(url):
-    return url.replace('/', os.path.sep)
+def _contents_and_path_for_url(backend, mat):
+    repo = get_repo(backend, mat)
+    path = mat.group()
+    # os-specific separator for paths only make sense for physical repos
+    if isinstance(repo, Repo):
+        path = path.replace('/', os.path.sep)
+    return repo.get_named_file(path), path
 
 
 def get_text_file(req, backend, mat):
     req.nocache()
-    path = _url_to_path(mat.group())
+    contents, path = _contents_and_path_for_url(backend, mat)
     logger.info('Sending plain text file %s', path)
-    return send_file(req, get_repo(backend, mat).get_named_file(path),
-                     'text/plain')
+    return send_file(req, contents, 'text/plain')
 
 
 def get_loose_object(req, backend, mat):
@@ -143,18 +147,16 @@ def get_loose_object(req, backend, mat):
 
 def get_pack_file(req, backend, mat):
     req.cache_forever()
-    path = _url_to_path(mat.group())
+    contents, path = _contents_and_path_for_url(backend, mat)
     logger.info('Sending pack file %s', path)
-    return send_file(req, get_repo(backend, mat).get_named_file(path),
-                     'application/x-git-packed-objects')
+    return send_file(req, contents, 'application/x-git-packed-objects')
 
 
 def get_idx_file(req, backend, mat):
     req.cache_forever()
-    path = _url_to_path(mat.group())
+    contents, path = _contents_and_path_for_url(backend, mat)
     logger.info('Sending pack file %s', path)
-    return send_file(req, get_repo(backend, mat).get_named_file(path),
-                     'application/x-git-packed-objects-toc')
+    return send_file(req, contents, 'application/x-git-packed-objects-toc')
 
 
 def get_info_refs(req, backend, mat):

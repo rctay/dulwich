@@ -45,8 +45,10 @@ class GitReceivePackTests(BlackboxTestCase):
 
     def test_missing_arg(self):
         process = self.run_command("dul-receive-pack", [])
+        # this may get messy with longer messages
         (stdout, stderr) = process.communicate()
-        self.assertEquals('usage: dul-receive-pack <git-dir>\n', stderr)
+        stderr = stderr.rstrip()
+        self.assertEquals('usage: dul-receive-pack <git-dir>', stderr)
         self.assertEquals('', stdout)
         self.assertEquals(1, process.returncode)
 
@@ -61,7 +63,9 @@ class GitUploadPackTests(BlackboxTestCase):
 
     def test_missing_arg(self):
         process = self.run_command("dul-upload-pack", [])
+        # this may get messy with longer messages
         (stdout, stderr) = process.communicate()
-        self.assertEquals('usage: dul-upload-pack <git-dir>\n', stderr)
+        stderr = stderr.rstrip()
+        self.assertEquals('usage: dul-upload-pack <git-dir>', stderr)
         self.assertEquals('', stdout)
         self.assertEquals(1, process.returncode)

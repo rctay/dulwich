@@ -1133,7 +1133,13 @@ class Repo(BaseRepo):
         norm_path = lambda path: os.path.normcase(os.path.realpath(path))
 
         path = path.lstrip(os.path.sep)
-        path = norm_path(os.path.join(self.controldir(), path))
+        parent = norm_path(self.controldir())
+        path = norm_path(os.path.join(parent, path))
+
+        # check that the file lies in the git directory
+        if not path.startswith(parent):
+            return None
+
         try:
             return open(path, 'rb')
         except (IOError, OSError), e:

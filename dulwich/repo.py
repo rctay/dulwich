@@ -1130,8 +1130,10 @@ class Repo(BaseRepo):
         """
         # TODO(dborowitz): sanitize filenames, since this is used directly by
         # the dumb web serving code.
+        norm_path = lambda path: os.path.normcase(os.path.realpath(path))
+
         path = path.lstrip(os.path.sep)
-        path = os.path.realpath(os.path.join(self.controldir(), path))
+        path = norm_path(os.path.join(self.controldir(), path))
         try:
             return open(path, 'rb')
         except (IOError, OSError), e:

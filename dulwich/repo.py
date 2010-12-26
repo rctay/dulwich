@@ -1131,8 +1131,9 @@ class Repo(BaseRepo):
         # TODO(dborowitz): sanitize filenames, since this is used directly by
         # the dumb web serving code.
         path = path.lstrip(os.path.sep)
+        path = os.path.realpath(os.path.join(self.controldir(), path))
         try:
-            return open(os.path.join(self.controldir(), path), 'rb')
+            return open(path, 'rb')
         except (IOError, OSError), e:
             if e.errno == errno.ENOENT:
                 return None

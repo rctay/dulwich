@@ -112,13 +112,9 @@ def send_file(req, f, content_type):
         raise
 
 
-def _url_to_path(url):
-    return url.replace('/', os.path.sep)
-
-
 def get_text_file(req, backend, mat):
     req.nocache()
-    path = _url_to_path(mat.group())
+    path = mat.group()
     logger.info('Sending plain text file %s', path)
     return send_file(req, get_repo(backend, mat).get_named_file(path),
                      'text/plain')
@@ -143,7 +139,7 @@ def get_loose_object(req, backend, mat):
 
 def get_pack_file(req, backend, mat):
     req.cache_forever()
-    path = _url_to_path(mat.group())
+    path = mat.group()
     logger.info('Sending pack file %s', path)
     return send_file(req, get_repo(backend, mat).get_named_file(path),
                      'application/x-git-packed-objects')
@@ -151,7 +147,7 @@ def get_pack_file(req, backend, mat):
 
 def get_idx_file(req, backend, mat):
     req.cache_forever()
-    path = _url_to_path(mat.group())
+    path = mat.group()
     logger.info('Sending pack file %s', path)
     return send_file(req, get_repo(backend, mat).get_named_file(path),
                      'application/x-git-packed-objects-toc')

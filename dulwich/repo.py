@@ -777,7 +777,7 @@ class BaseRepo(object):
         """Get a file from the control dir with a specific name.
 
         Although the filename should be interpreted as a filename relative to
-        the control dir in a disk-baked Repo, the object returned need not be
+        the control dir in a disk-based Repo, the object returned need not be
         pointing to a file in that location.
 
         :param path: The path to the file, relative to the control dir.
@@ -1122,7 +1122,7 @@ class Repo(BaseRepo):
         """Get a file from the control dir with a specific name.
 
         Although the filename should be interpreted as a filename relative to
-        the control dir in a disk-baked Repo, the object returned need not be
+        the control dir in a disk-based Repo, the object returned need not be
         pointing to a file in that location.
 
         :param path: The path to the file, relative to the control dir.

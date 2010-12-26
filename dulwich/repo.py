@@ -778,7 +778,7 @@ class BaseRepo(object):
         """Get a file from the control dir with a specific name.
 
         Although the filename should be interpreted as a filename relative to
-        the control dir in a disk-baked Repo, the object returned need not be
+        the control dir in a disk-based Repo, the object returned need not be
         pointing to a file in that location.
 
         :param path: The path to the file, relative to the control dir.
@@ -1126,7 +1126,7 @@ class Repo(BaseRepo):
         """Get a file from the control dir with a specific name.
 
         Although the filename should be interpreted as a filename relative to
-        the control dir in a disk-baked Repo, the object returned need not be
+        the control dir in a disk-based Repo, the object returned need not be
         pointing to a file in that location.
 
         :param path: The path to the file, relative to the control dir.
@@ -1134,9 +1134,18 @@ class Repo(BaseRepo):
         """
         # TODO(dborowitz): sanitize filenames, since this is used directly by
         # the dumb web serving code.
+        norm_path = lambda path: os.path.normcase(os.path.realpath(path))
+
         path = path.lstrip(os.path.sep)
+        parent = norm_path(self.controldir())
+        path = norm_path(os.path.join(parent, path))
+
+        # check that the file lies in the git directory
+        if not path.startswith(parent):
+            return None
+
         try:
-            return open(os.path.join(self.controldir(), path), 'rb')
+            return open(path, 'rb')
         except (IOError, OSError), e:
             if e.errno == errno.ENOENT:
                 return None
